@@ -1,6 +1,7 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import React, { useState, Dispatch } from "react";
 import { NumericFormat, NumericFormatProps } from "react-number-format";
+import HomeModal from "./HomeModal";
 
 type dataType = {
   id: number;

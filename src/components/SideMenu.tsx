@@ -33,7 +33,7 @@ const SideMenu = () => {
     getData();
   });
 
-  console.log(data);
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Box
@@ -61,18 +61,37 @@ const SideMenu = () => {
           <Tab label="Main course" {...a11yProps(2)} />
           <Tab label="Desserts" {...a11yProps(3)} />
         </Tabs>
-        <Button>Add new category</Button>
+        <Button
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Add new category
+        </Button>
       </Stack>
-      {data?.map((a) => {
-        return (
-          <TabPanel
-            key={a.index}
-            value={value}
-            index={a.index}
-            text={a.name}
-          ></TabPanel>
-        );
-      })}
+      <Stack py={"24px"} gap={"32px"}>
+        <Stack
+          direction={"row"}
+          width={"894px"}
+          py={"16px"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Typography>"title"</Typography>
+          <Button>Add new food</Button>
+        </Stack>
+        {/* {data?.map((a) => {
+          return (
+            <TabPanel
+              key={a.index}
+              value={value}
+              index={a.index}
+              text={a.name}
+            ></TabPanel>
+          );
+        })} */}
+      </Stack>
+      <addCategory open={open} setOpen={setOpen} />
     </Box>
   );
 };
