@@ -21,6 +21,8 @@ const style = {
   p: 4,
 };
 
+type dataType = { name: string }[];
+
 const AddCategoryModal = ({
   setOpen,
   open,
