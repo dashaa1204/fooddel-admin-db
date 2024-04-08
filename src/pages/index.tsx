@@ -5,7 +5,6 @@ const Home = () => {
   return (
     <Stack>
       <SideMenu />
-      <Typography>dsadas</Typography>
     </Stack>
   );
 };

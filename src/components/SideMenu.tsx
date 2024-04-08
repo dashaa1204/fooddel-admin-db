@@ -4,8 +4,8 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Button, Stack } from "@mui/material";
-import TabPanel from "./TabPanel";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import AddCategoryModal from "./AddCategoryModal";
 
 function a11yProps(index: number) {
   return {
@@ -14,11 +14,12 @@ function a11yProps(index: number) {
   };
 }
 
-type dataType = { index: number; name: string }[];
+type dataType = { name: string }[];
 
 const SideMenu = () => {
-  const [value, setValue] = React.useState(0);
-  const [data, setData] = React.useState<dataType>();
+  const [value, setValue] = useState(0);
+  const [data, setData] = useState<dataType>();
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -27,13 +28,11 @@ const SideMenu = () => {
   useEffect(() => {
     async function getData() {
       const res = await fetch("http://localhost:3001/api/category");
-      const data = await res.json();
-      setData(data);
+      const dataCategory = await res.json();
+      setData(dataCategory.categories);
     }
     getData();
-  });
-
-  const [open, setOpen] = React.useState(false);
+  }, []);
 
   return (
     <Box
@@ -56,10 +55,9 @@ const SideMenu = () => {
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
-          <Tab label="Break fast" {...a11yProps(0)} />
-          <Tab label="Soup" {...a11yProps(1)} />
-          <Tab label="Main course" {...a11yProps(2)} />
-          <Tab label="Desserts" {...a11yProps(3)} />
+          {data?.map((a, index) => {
+            return <Tab label={a.name} key={index} />;
+          })}
         </Tabs>
         <Button
           onClick={() => {
@@ -77,7 +75,7 @@ const SideMenu = () => {
           justifyContent={"space-between"}
           alignItems={"center"}
         >
-          <Typography>"title"</Typography>
+          <Typography>title</Typography>
           <Button>Add new food</Button>
         </Stack>
         {/* {data?.map((a) => {
@@ -91,7 +89,7 @@ const SideMenu = () => {
           );
         })} */}
       </Stack>
-      <addCategory open={open} setOpen={setOpen} />
+      <AddCategoryModal open={open} setOpen={setOpen} />
     </Box>
   );
 };
