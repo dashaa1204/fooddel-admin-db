@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import { Button, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddCategoryModal from "./AddCategoryModal";
+import TabPanel from "./TabPanel";
+import SaleCard from "./SaleCard";
 
 function a11yProps(index: number) {
   return {
@@ -14,12 +16,23 @@ function a11yProps(index: number) {
   };
 }
 
-type dataType = { name: string }[];
+type CategoryDataType = { name: string }[];
+type FoodDataType = {
+  name: string;
+  category: string;
+  img: string;
+  ingredients: string;
+  price: number;
+  sale: number;
+}[];
 
 const SideMenu = () => {
   const [value, setValue] = useState(0);
-  const [data, setData] = useState<dataType>();
+  const [categoryData, setCategoryData] = useState<CategoryDataType>();
   const [open, setOpen] = useState<boolean>(false);
+  const [foodData, setFoodData] = useState<FoodDataType>();
+
+  console.log(foodData);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -29,7 +42,10 @@ const SideMenu = () => {
     async function getData() {
       const res = await fetch("http://localhost:3001/api/category");
       const dataCategory = await res.json();
-      setData(dataCategory.categories);
+      setCategoryData(dataCategory.categories);
+      const res2 = await fetch("http://localhost:3001/api/food");
+      const food = await res2.json();
+      setFoodData(food.foods);
     }
     getData();
   }, []);
@@ -55,8 +71,8 @@ const SideMenu = () => {
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
-          {data?.map((a, index) => {
-            return <Tab label={a.name} key={index} />;
+          {categoryData?.map((a, index) => {
+            return <Tab label={a.name} {...a11yProps(index)} key={index} />;
           })}
         </Tabs>
         <Button
@@ -67,6 +83,7 @@ const SideMenu = () => {
           Add new category
         </Button>
       </Stack>
+
       <Stack py={"24px"} gap={"32px"}>
         <Stack
           direction={"row"}
@@ -78,16 +95,15 @@ const SideMenu = () => {
           <Typography>title</Typography>
           <Button>Add new food</Button>
         </Stack>
-        {/* {data?.map((a) => {
-          return (
-            <TabPanel
-              key={a.index}
-              value={value}
-              index={a.index}
-              text={a.name}
-            ></TabPanel>
-          );
-        })} */}
+        <Stack direction={"row"}>
+          {foodData?.map((a, index) => {
+            return (
+              <TabPanel value={value} index={index} key={index}>
+                <SaleCard foodData={a} />
+              </TabPanel>
+            );
+          })}
+        </Stack>
       </Stack>
       <AddCategoryModal open={open} setOpen={setOpen} />
     </Box>
