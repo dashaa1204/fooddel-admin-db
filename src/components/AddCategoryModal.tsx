@@ -22,16 +22,21 @@ const style = {
 };
 
 type dataType = { name: string }[];
+type CategoryDataType = { name: string; _id: string; __v: number }[];
 
 const AddCategoryModal = ({
   setOpen,
   open,
+  categoryData,
+  setCategoryData,
 }: {
   setOpen: Dispatch<SetStateAction<boolean>>;
   open: boolean;
+  categoryData: CategoryDataType;
+  setCategoryData: Dispatch<SetStateAction<CategoryDataType>>;
 }) => {
   const [empty, setEmpty] = useState("");
-  const addCategory = async (e: any) => {
+  const addCategory = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = { name: e.target.name.value };
     await fetch("http://localhost:3001/api/category", {
@@ -40,6 +45,7 @@ const AddCategoryModal = ({
       headers: { "Content-Type": "application/json" },
     });
     console.log(data);
+    setCategoryData([...categoryData, data]);
   };
   return (
     <Stack>

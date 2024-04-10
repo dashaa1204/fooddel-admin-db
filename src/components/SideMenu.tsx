@@ -16,7 +16,7 @@ function a11yProps(index: number) {
   };
 }
 
-type CategoryDataType = { name: string }[];
+type CategoryDataType = { name: string; _id: string; __v: number }[];
 type FoodDataType = {
   name: string;
   category: string;
@@ -28,11 +28,10 @@ type FoodDataType = {
 
 const SideMenu = () => {
   const [value, setValue] = useState(0);
-  const [categoryData, setCategoryData] = useState<CategoryDataType>();
+  const [categoryData, setCategoryData] = useState<CategoryDataType>([]);
   const [open, setOpen] = useState<boolean>(false);
-  const [foodData, setFoodData] = useState<FoodDataType>();
-
-  console.log(foodData);
+  const [foodData, setFoodData] = useState<FoodDataType>([]);
+  const [category, setCategory] = useState<CategoryDataType>([]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -46,10 +45,10 @@ const SideMenu = () => {
       const res2 = await fetch("http://localhost:3001/api/food");
       const food = await res2.json();
       setFoodData(food.foods);
+      setCategory(dataCategory.categories);
     }
     getData();
   }, []);
-
   return (
     <Box
       sx={{
@@ -95,17 +94,28 @@ const SideMenu = () => {
           <Typography>title</Typography>
           <Button>Add new food</Button>
         </Stack>
-        <Stack direction={"row"}>
-          {foodData?.map((a, index) => {
+        <Stack direction="row">
+          {category?.map((a, index: number) => {
             return (
               <TabPanel value={value} index={index} key={index}>
-                <SaleCard foodData={a} />
+                <Stack direction={"row"}>
+                  {foodData
+                    ?.filter((e) => e.category == a.name)
+                    .map((data) => {
+                      return <SaleCard foodData={data} key={index} />;
+                    })}
+                </Stack>
               </TabPanel>
             );
           })}
         </Stack>
       </Stack>
-      <AddCategoryModal open={open} setOpen={setOpen} />
+      <AddCategoryModal
+        open={open}
+        setOpen={setOpen}
+        categoryData={categoryData}
+        setCategoryData={setCategoryData}
+      />
     </Box>
   );
 };

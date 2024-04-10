@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -10,7 +10,7 @@ const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Stack
       role="tabpanel"
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
@@ -22,7 +22,7 @@ const TabPanel = (props: TabPanelProps) => {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Stack>
   );
 };
 
