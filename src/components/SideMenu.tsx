@@ -1,6 +1,6 @@
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+import Tab, { tabClasses } from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Button, Stack } from "@mui/material";
@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import AddCategoryModal from "./AddCategoryModal";
 import TabPanel from "./TabPanel";
 import SaleCard from "./SaleCard";
+import EditCategory from "./EditCategory";
+import { ClassNames } from "@emotion/react";
 
 function a11yProps(index: number) {
   return {
@@ -61,7 +63,7 @@ const SideMenu = () => {
         pr: "24px",
       }}
     >
-      <Stack gap={"40px"}>
+      <Stack gap={"40px"} width={"400px"}>
         <Typography>Food Menu</Typography>
         <Tabs
           orientation="vertical"
@@ -71,7 +73,15 @@ const SideMenu = () => {
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           {categoryData?.map((a, index) => {
-            return <Tab label={a.name} {...a11yProps(index)} key={index} />;
+            return (
+              <Tab
+                label={a.name}
+                {...a11yProps(index)}
+                key={index}
+                icon={<EditCategory data={a} />}
+                iconPosition="end"
+              />
+            );
           })}
         </Tabs>
         <Button
